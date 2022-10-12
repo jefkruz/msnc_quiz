@@ -10,6 +10,7 @@ use App\Models\Question;
 use App\Models\Rank;
 use App\Models\Region;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -97,14 +98,22 @@ class MainController extends Controller
     public function home()
     {
         $data['page_title'] = 'Welcome';
+
+        $data['quiz_taken'] = false;
+        $duration = Setting::first()->exam_duration;
+        $hour = floor($duration / 3600);
+        $minute = ($duration / 60) % 60;
+        $data['display'] = ($hour > 0) ? $hour . ' hour(s) ' . $minute  . ' minute(s)' : $minute  . ' minute(s)';
        return view('exam.start', $data);
     }
 
     public function start_quiz()
     {
+        $setting = Setting::first();
         $data['page_title'] = 'Start Exam';
-//        $data['duration'] = time() + (65 * 60);
-        $data['duration'] = time() + 8;
+        $data['duration'] = $setting->exam_duration;
+        $data['categories'] = ['Mathematics', 'English', 'Ministry and You'];
+        $data['essay'] = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae consequatur debitis eaque illo inventore ipsum magni molestiae nulla optio placeat quam qui quo quod reprehenderit, soluta, veritatis vitae? Alias, nihil.';
         return view('exam.quiz', $data);
     }
 
