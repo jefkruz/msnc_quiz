@@ -38,25 +38,28 @@ Route::get('/', function () {
 Auth::routes();
 
 
-Route::middleware([IsApplicant::class])->group(function () {
+// -----------------------------APPLICANT LOGIN ROUTES----------------------------------------//
+
+Route::get('register/{rank}',  [MainController::class, 'show_register'])->name('quiz.register');
+Route::post('register/{rank}',  [MainController::class, 'register']);
+Route::post('quiz/zones', [MainController::class, 'fetchzones']);
+Route::get('login', [MainController::class, 'show_login'])->name('quiz.login');
+Route::post('login', [MainController::class, 'login']);
+
+// -----------------------------APPLICANT AUTH ROUTES----------------------------------------//
 
 
+    Route::middleware([IsApplicant::class])->group(function () {
+    Route::get('quiz', [MainController::class, 'home'])->name('dashboard');
+    Route::get('start', [MainController::class, 'start_quiz'])->name('quiz.start');
 
-});
-
-// -----------------------------AWARDEE LOGIN ROUTES----------------------------------------//
-
-Route::group(['prefix' => 'quiz'], function () {
-    Route::get('/', [MainController::class, 'home'])->name('dashboard');
-    Route::get('register/{rank}',  [MainController::class, 'show_register'])->name('quiz.register');
-    Route::post('register/{rank}',  [MainController::class, 'register']);
-    Route::post('zones', [MainController::class, 'fetchzones']);
     Route::get('logout', [MainController::class, 'logout'])->name('quiz.logout');
 
-    Route::get('login', [MainController::class, 'show_login'])->name('quiz.login');
-    Route::post('login', [MainController::class, 'login']);
+
 
 });
+
+
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', [AdminController::class, 'index'])->name('home');

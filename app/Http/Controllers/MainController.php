@@ -60,7 +60,7 @@ class MainController extends Controller
     {
         request()->validate(Applicant::$rules);
         $applicant = Applicant::create($request->all());
-        session()->put('awardee',$applicant);
+        session()->put('applicant',$applicant);
         return redirect(route('dashboard'));
     }
     public function show_login()
@@ -89,14 +89,23 @@ class MainController extends Controller
             return redirect()->route('dashboard');
         }
         else {
-            return redirect()->back()->withInput()->with('error', 'Incorrect Credentials');
+            return redirect()->back()->withInput()->with('error', 'This Email is Not Registered ');
         }
 
     }
 
     public function home()
     {
-       return 'Welcome';
+        $data['page_title'] = 'Welcome';
+       return view('exam.start', $data);
+    }
+
+    public function start_quiz()
+    {
+        $data['page_title'] = 'Start Exam';
+//        $data['duration'] = time() + (65 * 60);
+        $data['duration'] = time() + 8;
+        return view('exam.quiz', $data);
     }
 
     public function logout()

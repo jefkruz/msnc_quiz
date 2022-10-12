@@ -171,7 +171,7 @@ class QuestionController extends Controller
             $question->note = trim($worksheet->getCellByColumnAndRow(9, $row));
             $question->save();
 
-            return $question;
+
 
         }
 

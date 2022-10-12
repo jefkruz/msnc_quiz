@@ -24,6 +24,8 @@
         <div class="card-body">
             <p class="login-box-msg">Kindly sign in to start your session</p>
 
+            @include('includes.alerts')
+            <br>
             <form method="POST" action="">
                 @csrf
 
@@ -45,13 +47,7 @@
 
                 <div class="row">
                     <div class="col-8">
-                        <div class="icheck-primary">
-                            <input class="" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-                            <label for="remember">
-                                Remember Me
-                            </label>
-                        </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-4">
@@ -60,14 +56,6 @@
                     <!-- /.col -->
                 </div>
             </form>
-
-            @if (Route::has('password.request'))
-                <p class="mb-1">
-                <a  href="{{ route('password.request') }}">
-                    {{ __('Forgot Your Password?') }}
-                </a>
-                </p>
-            @endif
 
         </div>
         <!-- /.card-body -->
