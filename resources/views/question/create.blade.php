@@ -25,3 +25,28 @@
         </div>
     </section>
 @endsection
+
+@section('scripts')
+    <script>
+        const answerSelect = $('#answer');
+        const opt1 = $('#option-0');
+        const opt2 = $('#option-1');
+        const opt3 = $('#option-2');
+        const opt4 = $('#option-3');
+
+        opt1.on('keyup', function(){
+            displayAnswers();
+        });
+        opt2.on('keyup', function(){
+            displayAnswers();
+        });
+        opt3.on('keyup', function(){
+            displayAnswers();
+        });
+        opt4.on('keyup', function(){
+            displayAnswers();
+        });
+
+        function displayAnswers(){}
+    </script>
+    @endsection

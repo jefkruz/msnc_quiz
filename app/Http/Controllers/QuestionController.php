@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Question;
 use App\Models\Rank;
 use App\Models\Role;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -35,16 +36,14 @@ class QuestionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
     public function create()
     {
         $data = $this->data;
         $data['page_title'] = 'Questions';
         $data['question'] =  new Question();
-
+        $data['labels'] = ['A','B','C','D'];
         return view('question.create', $data);
     }
 
@@ -121,8 +120,14 @@ class QuestionController extends Controller
     public function questions_import(Request $request)
     {
         $request->validate([
+            'category_id' => 'required',
+            'rank' => 'required',
             'file' => 'file|required'
         ]);
+
+        $category_id = $request->category_id;
+        $rank_id = $request->rank_id;
+
 
         // Check if file uploaded was a spreadsheet
         $allowedExtensions = ['xls', 'xlsx'];
@@ -151,17 +156,12 @@ class QuestionController extends Controller
         for($row = 2; $row <= $highestRow; $row++){
 
             //VALIDATE CATEGORY
-            $cat = trim($worksheet->getCellByColumnAndRow(1, $row));
-            $category = Category::where('id',$cat)->firstOrFail();
+//            $cat = trim($worksheet->getCellByColumnAndRow(1, $row));
 
-
-            //VALIDATE RANK
-            $ran = trim($worksheet->getCellByColumnAndRow(1, $row));
-            $rank = Rank::where('id',$ran)->firstOrFail();
 
             $question = new Question();
-            $question->category_id = $category->id;
-            $question->rank_id = $rank->id;
+            $question->category_id = $category_id;
+            $question->rank_id = $rank_id;
             $question->question = trim($worksheet->getCellByColumnAndRow(3, $row));
             $question->optiona = trim($worksheet->getCellByColumnAndRow(4, $row));
             $question->optionb = trim($worksheet->getCellByColumnAndRow(5, $row));

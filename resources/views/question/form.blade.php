@@ -31,46 +31,26 @@
             <div class="col-md-12">
                 <div class="form-group">
                     {{ Form::label('question') }}
-                    <textarea class="form-control" rows="3" name="question" placeholder="Enter ...">{{$question->question}}</textarea>
+                    <textarea class="form-control" rows="3" name="question" placeholder="Enter ..." required>{{$question->question}}</textarea>
 
                 </div>
             </div>
 
+        @foreach($labels as $i => $label)
             <div class="col-md-3">
                 <div class="form-group">
-                    {{ Form::label('option a') }}
-                    {{ Form::text('optiona', $question->optiona, ['class' => 'form-control' . ($errors->has('optiona') ? ' is-invalid' : ''), 'placeholder' => 'Optiona']) }}
-                    {!! $errors->first('optiona', '<div class="invalid-feedback">:message</div>') !!}
+                    {{ Form::label('option ' . $label) }}
+                    {{ Form::text('option[]', "", ['id' => 'option-' . $i, 'class' => 'form-control' . ($errors->has('option[]') ? ' is-invalid' : ''), 'placeholder' => 'Option ' . $label]) }}
+                    {!! $errors->first('option[]', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {{ Form::label('option b') }}
-                    {{ Form::text('optionb', $question->optionb, ['class' => 'form-control' . ($errors->has('optionb') ? ' is-invalid' : ''), 'placeholder' => 'Optionb']) }}
-                    {!! $errors->first('optionb', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {{ Form::label('option c') }}
-                    {{ Form::text('optionc', $question->optionc, ['class' => 'form-control' . ($errors->has('optionc') ? ' is-invalid' : ''), 'placeholder' => 'Optionc']) }}
-                    {!! $errors->first('optionc', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {{ Form::label('option d') }}
-                    {{ Form::text('optiond', $question->optiond, ['class' => 'form-control' . ($errors->has('optiond') ? ' is-invalid' : ''), 'placeholder' => 'Optiond']) }}
-                    {!! $errors->first('optiond', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
+        @endforeach
 
 
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('answer') }}
-                {{ Form::text('answer', $question->answer, ['class' => 'form-control' . ($errors->has('answer') ? ' is-invalid' : ''), 'placeholder' => 'Answer']) }}
-                {!! $errors->first('answer', '<div class="invalid-feedback">:message</div>') !!}
+                <select name="answer" id="answer" class="form-control" required></select>
             </div>
         </div>
         <div class="col-md-6">

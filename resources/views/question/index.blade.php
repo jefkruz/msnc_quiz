@@ -128,6 +128,22 @@
                 <form action="{{route('questions.import')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label>Rank</label>
+                            <select class="form-control select2" style="width: 100%;" name="rank_id">
+                                @foreach($ranks as $data)
+                                    <option value="{{$data->id}}">{{$data->display_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control select2" style="width: 100%;" name="category_id">
+                                @foreach($categories as $data)
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="input-group">
 
                                 <input type="file" class="form-control"  name="file" id="exampleInputFile">
