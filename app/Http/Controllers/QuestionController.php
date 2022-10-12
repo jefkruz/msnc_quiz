@@ -61,7 +61,7 @@ class QuestionController extends Controller
         $q->category_id = $request->category_id;
         $q->rank_id = $request->rank_id;
         $q->question = $request->question;
-        $q->options = json_encode($request->option);
+        $q->options = json_encode($request->options);
         $q->answer = $request->answer;
         $q->note = $request->note;
         $q->essay_id = $request->essay_id;
@@ -92,8 +92,10 @@ class QuestionController extends Controller
     public function edit($id)
     {
         $data = $this->data;
-        $data['question'] = Question::findOrFail($id);
         $data['page_title'] = 'Edit Question';
+        $question = Question::findOrFail($id);
+        $data['question'] = $question;
+        $data['options'] = json_decode($question->options);
         return view('question.edit', $data);
     }
 
@@ -105,11 +107,17 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
 
+        $question->category_id = $request->category_id;
+        $question->rank_id = $request->rank_id;
+        $question->question = $request->question;
+        $question->options = json_encode($request->options);
+        $question->answer = $request->answer;
+        $question->note = $request->note;
+        $question->essay_id = $request->essay_id;
 
-        $question->update($request->all());
+        $question->save();
 
-        return redirect()->route('questions.index')
-            ->with('success', 'Question updated successfully');
+        return back()->with('success', 'Question updated successfully');
     }
 
     public function questions_template()

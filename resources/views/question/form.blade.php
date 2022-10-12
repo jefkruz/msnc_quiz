@@ -5,10 +5,9 @@
                 <div class="form-group">
                     <label>Select Category</label>
                     <select class="form-control select2" name="category_id" required>
-                        <option value="">{{$question->cats->name ?? '--Select Category--'}}</option>
+                        <option value="">--Select category--</option>
                         @foreach($categories as $category)
-
-                            <option value="{{$category->id}}">{{$category->name}}</option>
+                            <option {{($category->id == $question->category_id) ? 'selected' : ''}} value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -19,7 +18,7 @@
                 <div class="form-group">
                     <label>Select Rank</label>
                     <select class="form-control select2" name="rank_id">
-                        <option value="">{{$question->levels->display_name?? '--Select Rank--'}}</option>
+                        <option value="">--Select Rank--</option>
                         @foreach($ranks as $rank)
 
                             <option value="{{$rank->id}}">{{$rank->display_name}}</option>
@@ -44,9 +43,17 @@
                         @if($i > 1)
                         <small class="text-danger">Optional</small>
                             @endif
+
+                        @if(isset($options))
+                            @php
+
+                                $value = (array_key_exists($i, $options)) ? $options[$i] : '';
+                            @endphp
+                        @endif
+
+
                     </label>
-                    {{ Form::text('option[]', "", ['id' => 'option-' . $i, 'class' => 'form-control' . ($errors->has('option[]') ? ' is-invalid' : ''), 'placeholder' => 'Option ' . $label]) }}
-                    {!! $errors->first('option[]', '<div class="invalid-feedback">:message</div>') !!}
+                    <input type="text" class="form-control" name="options[]" value="{{$value ?? ''}}" id="option-{{$i}}" placeholder="Option {{$label}}">
                 </div>
             </div>
         @endforeach
@@ -55,6 +62,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('answer') }}
+                <input type="hidden" id="selectedAnswer" value="{{$question->answer}}">
                 <select name="answer" id="answer" class="form-control" required></select>
             </div>
         </div>
@@ -74,3 +82,60 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </div>
+
+
+@section('scripts')
+    <script>
+        const selectedAnswer = $('#selectedAnswer');
+        const answerSelect = $('#answer');
+        const opt1 = $('#option-0');
+        const opt2 = $('#option-1');
+        const opt3 = $('#option-2');
+        const opt4 = $('#option-3');
+
+        displayAnswers();
+
+        opt1.on('keyup', function(){
+            displayAnswers();
+        });
+        opt2.on('keyup', function(){
+            displayAnswers();
+        });
+        opt3.on('keyup', function(){
+            displayAnswers();
+        });
+        opt4.on('keyup', function(){
+            displayAnswers();
+        });
+
+        function displayAnswers(){
+            const one = opt1.val().trim();
+            const two = opt2.val().trim();
+            const three = opt3.val().trim();
+            const four = opt4.val().trim();
+
+            let answers = [];
+            if(one.length){
+                answers.push(one);
+            }
+            if(two.length){
+                answers.push(two);
+            }
+            if(three.length){
+                answers.push(three);
+            }
+            if(four.length){
+                answers.push(four);
+            }
+
+            let html = '';
+            for(let i = 0; i < answers.length; i++){
+                const sel = (Number(selectedAnswer.val()) === i) ? 'selected' : '';
+
+                html += '<option ' + sel + ' value="' + i + '">' + answers[i] + '</option>';
+            }
+
+            answerSelect.html(html);
+        }
+    </script>
+@endsection

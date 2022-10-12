@@ -17,6 +17,8 @@
                             {{ method_field('PATCH') }}
                             @csrf
 
+                            <input type="hidden" name="question_id" value="{{$question->id}}" required>
+
                             @include('question.form')
 
                         </form>
