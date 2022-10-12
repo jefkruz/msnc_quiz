@@ -16,12 +16,8 @@ class Question extends Model
 
     static $rules = [
 		'category_id' => 'required',
-		'rank_id' => 'required',
 		'question' => 'required',
-		'optiona' => 'required',
-		'optionb' => 'required',
-		'optionc' => 'required',
-		'optiond' => 'required',
+		'option' => 'required',
 		'answer' => 'required',
     ];
     public function levels()

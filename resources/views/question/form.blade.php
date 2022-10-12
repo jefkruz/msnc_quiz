@@ -4,8 +4,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Select Category</label>
-                    <select class="form-control select2" style="width: 100%;" name="category_id">
-                        <option value="">{{$question->cats->name?? '--Select Category--'}}</option>
+                    <select class="form-control select2" name="category_id" required>
+                        <option value="">{{$question->cats->name ?? '--Select Category--'}}</option>
                         @foreach($categories as $category)
 
                             <option value="{{$category->id}}">{{$category->name}}</option>
@@ -18,7 +18,7 @@
 
                 <div class="form-group">
                     <label>Select Rank</label>
-                    <select class="form-control select2" style="width: 100%;" name="rank_id">
+                    <select class="form-control select2" name="rank_id">
                         <option value="">{{$question->levels->display_name?? '--Select Rank--'}}</option>
                         @foreach($ranks as $rank)
 
@@ -39,7 +39,12 @@
         @foreach($labels as $i => $label)
             <div class="col-md-3">
                 <div class="form-group">
-                    {{ Form::label('option ' . $label) }}
+                    <label>
+                        Option {{$label}}
+                        @if($i > 1)
+                        <small class="text-danger">Optional</small>
+                            @endif
+                    </label>
                     {{ Form::text('option[]', "", ['id' => 'option-' . $i, 'class' => 'form-control' . ($errors->has('option[]') ? ' is-invalid' : ''), 'placeholder' => 'Option ' . $label]) }}
                     {!! $errors->first('option[]', '<div class="invalid-feedback">:message</div>') !!}
                 </div>

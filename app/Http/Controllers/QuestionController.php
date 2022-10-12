@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Question;
 use App\Models\Rank;
 use App\Models\Role;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -24,6 +26,7 @@ class QuestionController extends Controller
         $this->data['roles'] = Role::all();
         $this->data['ranks'] = Rank::all();
         $this->data['categories'] = Category::all();
+        $this->data['labels'] = ['A','B','C','D'];
 
         $this->middleware('role:admin');
     }
@@ -36,31 +39,35 @@ class QuestionController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     * @return Application|Factory|View
      */
     public function create()
     {
         $data = $this->data;
         $data['page_title'] = 'Questions';
         $data['question'] =  new Question();
-        $data['labels'] = ['A','B','C','D'];
         return view('question.create', $data);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         request()->validate(Question::$rules);
 
-        $question = Question::create($request->all());
+        $q = new Question();
+        $q->category_id = $request->category_id;
+        $q->rank_id = $request->rank_id;
+        $q->question = $request->question;
+        $q->options = json_encode($request->option);
+        $q->answer = $request->answer;
+        $q->note = $request->note;
+        $q->essay_id = $request->essay_id;
+        $q->save();
 
-        return redirect()->route('questions.index')
-            ->with('success', 'Question created successfully.');
+        return back()->with('success', 'Question created successfully.');
     }
 
     /**
@@ -79,27 +86,21 @@ class QuestionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return Application|Factory|View
      */
     public function edit($id)
     {
         $data = $this->data;
-        $data['question'] = Question::find($id);
+        $data['question'] = Question::findOrFail($id);
         $data['page_title'] = 'Edit Question';
-
-
         return view('question.edit', $data);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Question $question
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Question $question
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Question $question)
     {

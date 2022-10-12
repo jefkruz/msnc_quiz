@@ -47,6 +47,32 @@
             displayAnswers();
         });
 
-        function displayAnswers(){}
+        function displayAnswers(){
+            const one = opt1.val().trim();
+            const two = opt2.val().trim();
+            const three = opt3.val().trim();
+            const four = opt4.val().trim();
+
+            let answers = [];
+            if(one.length){
+                answers.push(one);
+            }
+            if(two.length){
+                answers.push(two);
+            }
+            if(three.length){
+                answers.push(three);
+            }
+            if(four.length){
+                answers.push(four);
+            }
+
+            let html = '';
+            for(let i = 0; i < answers.length; i++){
+                html += '<option value="' + i + '">' + answers[i] + '</option>';
+            }
+
+            answerSelect.html(html);
+        }
     </script>
     @endsection

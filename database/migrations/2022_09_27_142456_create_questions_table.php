@@ -16,13 +16,11 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('category_id');
-            $table->bigInteger('rank_id');
+            $table->bigInteger('essay_id')->nullable();
+            $table->bigInteger('rank_id')->nullable();
             $table->string('question_type')->nullable();
             $table->string('question');
-            $table->string('optiona');
-            $table->string('optionb');
-            $table->string('optionc');
-            $table->string('optiond');
+            $table->text('options');
             $table->string('answer');
             $table->string('note')->nullable();
             $table->timestamps();

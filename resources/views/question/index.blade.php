@@ -71,10 +71,7 @@
                                         <th>S/N</th>
 
 										<th>QUESTION</th>
-										<th>Option A</th>
-										<th>Option B</th>
-										<th>Option C</th>
-										<th>Option D</th>
+										<th>Options</th>
 										<th>ANSWER</th>
 
 
@@ -88,11 +85,18 @@
 
 
 											<td>{{ $question->question }}</td>
-											<td>{{ $question->optiona }}</td>
-											<td>{{ $question->optionb }}</td>
-											<td>{{ $question->optionc }}</td>
-											<td>{{ $question->optiond }}</td>
-											<td>{{ $question->answer }}</td>
+											<td>
+                                                @php
+                                                $options = json_decode($question->options);
+                                                @endphp
+                                                @foreach ($options as $option)
+                                                    <span class="badge badge-primary p-2">{{$option}}</span>
+                                                @endforeach
+{{--                                                {{ $question->options }} --}}
+                                            </td>
+											<td>
+                                                <span class="badge badge-info p-2">{{$options[$question->answer]}}</span>
+                                            </td>
 
 
                                             <td>
