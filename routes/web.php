@@ -43,8 +43,8 @@ Auth::routes();
 Route::get('register/{rank}',  [MainController::class, 'show_register'])->name('quiz.register');
 Route::post('register/{rank}',  [MainController::class, 'register']);
 Route::post('quiz/zones', [MainController::class, 'fetchzones']);
-Route::get('login', [MainController::class, 'show_login'])->name('quiz.login');
-Route::post('login', [MainController::class, 'login']);
+Route::get('exam/login', [MainController::class, 'show_login'])->name('quiz.login');
+Route::post('exam/login', [MainController::class, 'login']);
 
 // -----------------------------APPLICANT AUTH ROUTES----------------------------------------//
 
