@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Applicant;
+use App\Models\Application;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Job;
@@ -98,12 +99,26 @@ class MainController extends Controller
     public function home()
     {
         $data['page_title'] = 'Welcome';
-
-        $data['quiz_taken'] = false;
+        $id = session()->get('applicant')->id;
+        $quiz = Application::where('applicant_id', $id)->first();
+        $data['quiz'] = $quiz;
         $duration = Setting::first()->exam_duration;
         $hour = floor($duration / 3600);
         $minute = ($duration / 60) % 60;
         $data['display'] = ($hour > 0) ? $hour . ' hour(s) ' . $minute  . ' minute(s)' : $minute  . ' minute(s)';
+
+        if(!$quiz){
+            $quiz_taken = false;
+        } else {
+            $last_seen = strtotime($quiz->created_at);
+            if((time() - $last_seen) > $duration){
+                $quiz_taken = true;
+            } else {
+                $quiz_taken = false;
+            }
+        }
+        $data['quiz_taken'] = $quiz_taken;
+
        return view('exam.start', $data);
     }
 
@@ -111,10 +126,106 @@ class MainController extends Controller
     {
         $setting = Setting::first();
         $data['page_title'] = 'Start Exam';
-        $data['duration'] = $setting->exam_duration;
-        $data['categories'] = ['Mathematics', 'English', 'Ministry and You'];
+        $id = session()->get('applicant')->id;
+        $quiz = Application::where('applicant_id', $id)->first();
+        if($quiz){
+            $questions = $this->selectExamQuestions($quiz->questions);
+            $last_seen = strtotime($quiz->created_at);
+            $time_spent = time() - $last_seen;
+            $duration = $setting->exam_duration - $time_spent;
+        }
+        else {
+            $quiz = new Application();
+            $quiz->applicant_id = $id;
+
+            $questions = $this->selectExamQuestions();
+
+            $quiz->questions = json_encode($this->arrangeQuestionIds($questions));
+
+            $quiz->save();
+
+            $duration = $setting->exam_duration;
+
+        }
+
+        // return $questions;
+
+        $data['categories'] = $questions;
+        $data['duration'] = $duration;
         $data['essay'] = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae consequatur debitis eaque illo inventore ipsum magni molestiae nulla optio placeat quam qui quo quod reprehenderit, soluta, veritatis vitae? Alias, nihil.';
         return view('exam.quiz', $data);
+    }
+
+    private function selectExamQuestions($questions = null)
+    {
+        $categories = Category::all();
+        if($questions != null){
+            $q = json_decode($questions, true);
+            $pool = [];
+            foreach($q as $category){
+                $a = [];
+                foreach($categories as $c){
+                    if($c->id == $category['cat_id']){
+                        $a['category'] = $c->name;
+                        $a['cat_id'] = $c->id;
+
+                        $ques = Question::whereIn('id', $category[$c->name])
+                   ->get();
+                   $payload = [];
+                   foreach($category[$c->name] as $p){
+                    foreach($ques as $qui){
+                        if($qui->id == $p){
+                            array_push($payload, $qui);
+                            break;
+                        }
+                    }
+                   }
+                        $a['questions'] = $payload;
+                        break;
+                    }
+
+                    array_push($pool, $a);
+                }
+                
+               
+                array_push($pool, $a);
+            }
+
+            return $pool;
+        }
+
+        $setting = Setting::first();
+
+        $pool = [];
+        foreach($categories as $category){
+            $questions = Question::where('category_id', $category->id)
+                ->inRandomOrder()->limit($setting->category_questions)->get();
+
+            array_push($pool, [
+                'category' => $category->name,
+                'cat_id' => $category->id,
+                'questions' => $questions
+            ]);
+        }
+
+        return $pool;
+    }
+
+    private function arrangeQuestionIds($pool)
+    {
+        $arr = [];
+        foreach($pool as $item){
+            $a = [];
+            $q_pool = [];
+            foreach($item['questions'] as $q){
+                array_push($q_pool, $q['id']);
+            }
+            $a[$item['category']] = $q_pool;
+            $a['cat_id'] = $item['cat_id'];
+            array_push($arr, $a);
+        }
+
+        return $arr;
     }
 
     public function logout()

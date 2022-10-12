@@ -20,6 +20,8 @@ class Question extends Model
 		'options' => 'required',
 		'answer' => 'required',
     ];
+
+    protected $hidden = ['answer'];
     public function levels()
     {
         return $this

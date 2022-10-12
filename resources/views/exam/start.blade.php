@@ -15,7 +15,7 @@
                         <div class="col-md-4">
                             <i class="fa-pull-right fa fa-trophy fa-3x"></i>
                             <br>
-                            <h1 class="fa-pull-right"><small class="text-warning">Your score:</small> 70%</h1>
+                            <h1 class="fa-pull-right"><small class="text-warning">Your score:</small> {{$quiz->score}}%</h1>
                         </div>
                     </div>
                 </div>

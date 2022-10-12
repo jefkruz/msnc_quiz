@@ -18,52 +18,33 @@
             @foreach($categories as $category)
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-bold"><small>Category:</small> {{$category}}</h4>
+                    <h4 class="card-title text-bold"><small>Category:</small> {{dd($category)}}</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        @for($i = 1; $i <= 10; $i++)
+                        @foreach($category['questions'] as $i => $question)
                         <div class="col-12">
-                            <span>{{'Q' . $i}}.</span>
-                            <h5 class="text-bold">How many ladies are tripping for Joseph Ugbeva?</h5>
+                            <span>{{'Q' . ($i+1)}}.</span>
+                            <h5 class="text-bold">{{$question->question}}</h5>
                             <div class="form-group">
-                                @for($j = 1; $j <= 4; $j++)
+                                @php
+                                    $options = json_decode($question->options);
+                                @endphp
+                                @foreach($options as $option)
                                 <div class="form-check">
-                                    <input class="form-check-input" id="{{$category}}-{{$i}}-{{$j}}" type="radio" name="{{$category}}-{{$i}}">
-                                    <label for="{{$category}}-{{$i}}-{{$j}}" class="form-check-label">Option {{$j}}</label>
+                                    <input class="form-check-input" id="q-{{$i}}" type="radio" name="q-{{$i}}">
+                                    <label for="q-{{$i}}" class="form-check-label">Option {{$i}}</label>
                                 </div>
-                                @endfor
+                                @endforeach
                             </div>
 
                             <hr>
                         </div>
-                            @endfor
-                        @if($category == 'English')
-                            <div class="col-12">
-                                <strong>Read the essay below and answer the following questions:</strong>
-                                <p class="m-3">{{$essay}}</p>
-                            </div>
-                                @for($i = 11; $i <= 20; $i++)
-                                    <div class="col-12">
-                                        <span>{{'Q' . $i}}.</span>
-                                        <h5 class="text-bold">How many ladies are tripping for Joseph Ugbeva?</h5>
-                                        <div class="form-group">
-                                            @for($j = 1; $j <= 4; $j++)
-                                                <div class="form-check">
-                                                    <input class="form-check-input" id="{{$category}}-{{$i}}-{{$j}}" type="radio" name="{{$category}}-{{$i}}">
-                                                    <label for="{{$category}}-{{$i}}-{{$j}}" class="form-check-label">Option {{$j}}</label>
-                                                </div>
-                                            @endfor
-                                        </div>
-
-                                        <hr>
-                                    </div>
-                                @endfor
-                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
-                @endforeach
+        @endforeach
         </div>
     </div>
 
