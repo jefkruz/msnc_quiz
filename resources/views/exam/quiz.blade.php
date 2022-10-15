@@ -18,10 +18,13 @@
             @foreach($categories as $category)
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-bold"><small>Category:</small> {{dd($category)}}</h4>
+                    <h4 class="card-title text-bold"><small>Category:</small> {{$category['category']}}</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        @php
+                        $counter = 0;
+                        @endphp
                         @foreach($category['questions'] as $i => $question)
                         <div class="col-12">
                             <span>{{'Q' . ($i+1)}}.</span>
@@ -30,16 +33,19 @@
                                 @php
                                     $options = json_decode($question->options);
                                 @endphp
-                                @foreach($options as $option)
+                                @foreach($options as $j => $option)
                                 <div class="form-check">
-                                    <input class="form-check-input" id="q-{{$i}}" type="radio" name="q-{{$i}}">
-                                    <label for="q-{{$i}}" class="form-check-label">Option {{$i}}</label>
+                                    <input class="form-check-input" id="{{$question->id}}-{{$i}}-{{$j}}" type="radio" name="answers-{{$counter}}">
+                                    <label for="{{$question->id}}-{{$i}}-{{$j}}" class="form-check-label">{{$option}}</label>
                                 </div>
                                 @endforeach
                             </div>
 
                             <hr>
                         </div>
+                            @php
+                                $counter++;
+                            @endphp
                         @endforeach
                     </div>
                 </div>

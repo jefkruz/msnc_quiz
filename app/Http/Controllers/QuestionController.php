@@ -57,11 +57,19 @@ class QuestionController extends Controller
     {
         request()->validate(Question::$rules);
 
+        $options = $request->options;
+        $arr = [];
+        foreach ($options as $option){
+            if(strlen(trim($option)) > 0){
+                array_push($arr, $option);
+            }
+        }
+
         $q = new Question();
         $q->category_id = $request->category_id;
         $q->rank_id = $request->rank_id;
         $q->question = $request->question;
-        $q->options = json_encode($request->options);
+        $q->options = json_encode($arr);
         $q->answer = $request->answer;
         $q->note = $request->note;
         $q->essay_id = $request->essay_id;
@@ -107,10 +115,18 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
 
+        $options = $request->options;
+        $arr = [];
+        foreach ($options as $option){
+            if(strlen(trim($option)) > 0){
+                array_push($arr, $option);
+            }
+        }
+
         $question->category_id = $request->category_id;
         $question->rank_id = $request->rank_id;
         $question->question = $request->question;
-        $question->options = json_encode($request->options);
+        $question->options = json_encode($arr);
         $question->answer = $request->answer;
         $question->note = $request->note;
         $question->essay_id = $request->essay_id;

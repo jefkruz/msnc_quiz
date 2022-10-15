@@ -129,7 +129,6 @@ class MainController extends Controller
         $id = session()->get('applicant')->id;
         $quiz = Application::where('applicant_id', $id)->first();
         if($quiz){
-            $questions = $this->selectExamQuestions($quiz->questions);
             $last_seen = strtotime($quiz->created_at);
             $time_spent = time() - $last_seen;
             $duration = $setting->exam_duration - $time_spent;
@@ -139,8 +138,7 @@ class MainController extends Controller
             $quiz->applicant_id = $id;
 
             $questions = $this->selectExamQuestions();
-
-            $quiz->questions = json_encode($this->arrangeQuestionIds($questions));
+            $quiz->questions = json_encode($questions);
 
             $quiz->save();
 
@@ -148,51 +146,17 @@ class MainController extends Controller
 
         }
 
-        // return $questions;
+        $categories = $this->arrangeQuestionIds($quiz->questions);
 
-        $data['categories'] = $questions;
+        $data['categories'] = $categories;
         $data['duration'] = $duration;
         $data['essay'] = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae consequatur debitis eaque illo inventore ipsum magni molestiae nulla optio placeat quam qui quo quod reprehenderit, soluta, veritatis vitae? Alias, nihil.';
         return view('exam.quiz', $data);
     }
 
-    private function selectExamQuestions($questions = null)
+    private function selectExamQuestions()
     {
         $categories = Category::all();
-        if($questions != null){
-            $q = json_decode($questions, true);
-            $pool = [];
-            foreach($q as $category){
-                $a = [];
-                foreach($categories as $c){
-                    if($c->id == $category['cat_id']){
-                        $a['category'] = $c->name;
-                        $a['cat_id'] = $c->id;
-
-                        $ques = Question::whereIn('id', $category[$c->name])
-                   ->get();
-                   $payload = [];
-                   foreach($category[$c->name] as $p){
-                    foreach($ques as $qui){
-                        if($qui->id == $p){
-                            array_push($payload, $qui);
-                            break;
-                        }
-                    }
-                   }
-                        $a['questions'] = $payload;
-                        break;
-                    }
-
-                    array_push($pool, $a);
-                }
-                
-               
-                array_push($pool, $a);
-            }
-
-            return $pool;
-        }
 
         $setting = Setting::first();
 
@@ -201,10 +165,15 @@ class MainController extends Controller
             $questions = Question::where('category_id', $category->id)
                 ->inRandomOrder()->limit($setting->category_questions)->get();
 
+            $ids = [];
+            foreach ($questions as $question){
+                array_push($ids, $question->id);
+            }
+
             array_push($pool, [
                 'category' => $category->name,
                 'cat_id' => $category->id,
-                'questions' => $questions
+                'questions' => implode(",", $ids)
             ]);
         }
 
@@ -214,18 +183,35 @@ class MainController extends Controller
     private function arrangeQuestionIds($pool)
     {
         $arr = [];
-        foreach($pool as $item){
-            $a = [];
-            $q_pool = [];
-            foreach($item['questions'] as $q){
-                array_push($q_pool, $q['id']);
+        $questions = json_decode($pool);
+        foreach($questions as $item){
+            if(strlen($item->questions) != 0){
+                $a = [
+                    'category' => $item->category,
+                    'questions' => $this->sortQuestions($item->questions)
+                ];
+                array_push($arr, $a);
             }
-            $a[$item['category']] = $q_pool;
-            $a['cat_id'] = $item['cat_id'];
-            array_push($arr, $a);
+
         }
 
         return $arr;
+    }
+
+    private function sortQuestions($ids)
+    {
+        $ids = explode(",", $ids);
+        $questions = Question::whereIn('id', $ids)->get();
+        $qs = [];
+        foreach($ids as $id){
+            foreach ($questions as $question){
+                if($question->id == $id){
+                    array_push($qs, $question);
+                    break;
+                }
+            }
+        }
+        return $qs;
     }
 
     public function logout()
