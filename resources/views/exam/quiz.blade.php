@@ -75,6 +75,8 @@
         const minuteSpan = $('#minute');
         const secondSpan = $('#seconds');
 
+        const examForm = $('#exam');
+
         // Get integer value of what PHP returns as duration
         let duration = Number('{{$duration}}');
 
@@ -100,7 +102,7 @@
 
 
         function submitExam(){
-            // $.ajax({});
+            examForm.submit();
         }
 
     </script>
