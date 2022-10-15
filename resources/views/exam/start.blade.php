@@ -6,16 +6,17 @@
     @if($quiz_taken)
     <div class="row mt-5">
         <div class="col-md-8 offset-md-2">
-            <div class="card bg-secondary">
+            <div class="card bg-navy">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
                             <h3>You have completed your exam</h3>
+                            <h5 class="text-orange">{{$quiz->remarks}}</h5>
                         </div>
                         <div class="col-md-4">
                             <i class="fa-pull-right fa fa-trophy fa-3x"></i>
                             <br>
-                            <h1 class="fa-pull-right"><small class="text-warning">Your score:</small> {{$quiz->score}}%</h1>
+                            <h1 class="fa-pull-right"><small class="text-info">Your score:</small> {{$quiz->score}}%</h1>
                         </div>
                     </div>
                 </div>

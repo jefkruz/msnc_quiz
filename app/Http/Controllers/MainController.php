@@ -118,6 +118,12 @@ class MainController extends Controller
                 $last_seen = strtotime($quiz->created_at);
                 if((time() - $last_seen) > $duration){
                     $quiz_taken = true;
+                    if($quiz->remarks == null){
+                        $quiz->remarks = 'You missed your exam.';
+                        $quiz->score = '0';
+                        $quiz->save();
+                    }
+
                 } else {
                     $quiz_taken = false;
                 }
