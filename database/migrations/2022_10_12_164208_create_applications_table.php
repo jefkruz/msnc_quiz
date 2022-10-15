@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->integer('applicant_id');
             $table->text('questions');
-            $table->text('answers');
-            $table->string('score');
+            $table->string('total_questions');
+            $table->text('answers')->nullable();
+            $table->text('correct_answers')->nullable();
+            $table->string('score')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

@@ -15,6 +15,12 @@
 
     <div class="row mt-5">
         <div class="col-10 offset-1">
+            <form method="post" id="exam">
+                @csrf
+                <input type="hidden" name="exam_id" value="{{$exam->id}}" required>
+                @php
+                    $counter = 0;
+                @endphp
             @foreach($categories as $category)
             <div class="card">
                 <div class="card-header">
@@ -22,9 +28,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        @php
-                        $counter = 0;
-                        @endphp
+
                         @foreach($category['questions'] as $i => $question)
                         <div class="col-12">
                             <span>{{'Q' . ($i+1)}}.</span>
@@ -35,28 +39,31 @@
                                 @endphp
                                 @foreach($options as $j => $option)
                                 <div class="form-check">
-                                    <input class="form-check-input" id="{{$question->id}}-{{$i}}-{{$j}}" type="radio" name="answers-{{$counter}}">
-                                    <label for="{{$question->id}}-{{$i}}-{{$j}}" class="form-check-label">{{$option}}</label>
+                                    <input class="form-check-input" id="{{$question->id}}-{{$i}}-{{$j}}" type="radio" value="{{$j}}" name="answers-{{$counter}}" >
+                                    <label for="{{$question->id}}-{{$i}}-{{$j}}" class="form-check-label"><strong>{{$labels[$j]}}:</strong> {{$option}}</label>
                                 </div>
+
                                 @endforeach
+                                @php
+                                    $counter++;
+                                @endphp
                             </div>
 
                             <hr>
                         </div>
-                            @php
-                                $counter++;
-                            @endphp
+
                         @endforeach
                     </div>
                 </div>
             </div>
-        @endforeach
+            @endforeach
+            </form>
         </div>
     </div>
 
     <div class="row mt-3 mb-3">
         <div class="col-12 text-center">
-            <button class="btn btn-primary">Submit Exam</button>
+            <button type="submit" form="exam" class="btn btn-primary">Submit Exam</button>
         </div>
     </div>
 @endsection

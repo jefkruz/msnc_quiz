@@ -52,6 +52,7 @@ Route::post('exam/login', [MainController::class, 'login']);
     Route::middleware([IsApplicant::class])->group(function () {
     Route::get('quiz', [MainController::class, 'home'])->name('dashboard');
     Route::get('start', [MainController::class, 'start_quiz'])->name('quiz.start');
+    Route::post('start', [MainController::class, 'submit_quiz']);
 
     Route::get('logout', [MainController::class, 'logout'])->name('quiz.logout');
 
