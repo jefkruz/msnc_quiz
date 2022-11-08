@@ -63,4 +63,10 @@ class Applicant extends Model
             ->Belongsto(Department::class, 'department');
     }
 
+    public function exam()
+    {
+        return $this
+            ->Belongsto(Application::class, 'id');
+    }
+
 }

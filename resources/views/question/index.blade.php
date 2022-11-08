@@ -51,13 +51,13 @@
                                 <a href="{{ route('questions.create') }}" class="btn btn-primary btn-sm "  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
-                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-sm">
-                                Bulk Import
-                            </button>
-                            <a href="{{ route('questions.template') }}" class="btn btn-info btn-sm"  data-placement="left">
-                                <i class="fe fe-download fs-14"></i>
-                                Download template
-                            </a>
+{{--                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-sm">--}}
+{{--                                Bulk Import--}}
+{{--                            </button>--}}
+{{--                            <a href="{{ route('questions.template') }}" class="btn btn-info btn-sm"  data-placement="left">--}}
+{{--                                <i class="fe fe-download fs-14"></i>--}}
+{{--                                Download template--}}
+{{--                            </a>--}}
 
                     </div>
 

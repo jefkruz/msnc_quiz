@@ -19,13 +19,13 @@ class CheckRole
     {
 
         if (!Auth::check()) // This isnt necessary, it should be part of your 'auth' middleware
-            return redirect('/home');
+            return redirect('/login');
 
         $user = Auth::user();
         if($user->roles->name == $role)
             return $next($request);
 
-        return redirect('/home');
+        return redirect('/login');
     }
 
 }

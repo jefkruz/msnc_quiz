@@ -48,7 +48,7 @@ class RedirectIfAuthenticated
                 return '/admin';
                 break;
             default:
-                return '/home';
+                return '/login';
                 break;
         }
     }

@@ -69,6 +69,7 @@
 										<th>NAME</th>
 										<th>EMAIL</th>
 										<th>PHONE</th>
+										<th>SCORE</th>
 
                                         <th></th>
                                     </tr>
@@ -82,6 +83,7 @@
 											<td>{{ $applicant->name }}</td>
 											<td>{{ $applicant->email }}</td>
 											<td>{{ $applicant->phone }}</td>
+											<td>{{$applicant->exam->score}}</td>
 
                                             <td>
                                                 <form action="{{ route('applicants.destroy',$applicant->id) }}" method="POST">
