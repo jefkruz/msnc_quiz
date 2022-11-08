@@ -71,7 +71,7 @@
 										<th>PHONE</th>
 										<th>SCORE</th>
 
-                                        <th></th>
+                                        <th>ACTIONS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
